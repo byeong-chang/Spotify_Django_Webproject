@@ -1,0 +1,215 @@
+{% extends 'user_base.html' %}
+
+{% block content %}
+{% load static %}
+    <style>
+            .search-form {
+        margin-top : 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .search-input {
+        border: 1px solid #dfe1e5;
+        border-radius: 24px;
+        font-size: 16px;
+        height: 44px;
+        padding: 0 16px;
+        margin-bottom: 16px;
+        min-width : 900px;
+        width: 50%;
+        box-shadow: 0px 1px 1px rgba(32, 33, 36, 0.28);
+      }
+
+      .search-btn {
+        display : none;
+      }
+
+      .title {
+        font-size: 70px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+      .search-form {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .search-input {
+      width: 400px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .search-btn {
+      padding: 10px 20px;
+      background-color: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .subtitle {
+      margin-top: 50px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      background-color: #edf2f7;
+      padding: 1rem;
+      border-radius: 0.25rem;
+      margin-bottom: 1.5rem;
+      color: #4a5568;
+      font-size: 1.0rem;
+      font-weight: bold;
+    }
+
+    ul {
+
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .img-list {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-right: 20px;
+      object-fit: cover;
+    }
+
+    .a{
+      color: #2c3e50;
+      font-size: 1.2rem;
+      text-decoration: none;
+    }
+    .search-form {
+    margin-top : 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .search-input {
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    font-size: 16px;
+    height: 44px;
+    padding: 0 16px;
+    margin-bottom: 16px;
+    min-width : 900px;
+    width: 50%;
+    box-shadow: 0px 1px 1px rgba(32, 33, 36, 0.28);
+  }
+
+  .search-btn {
+    display : none;
+  }
+
+  .title {
+    font-size: 70px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 40px;
+
+}
+.swiper-container {
+    max-width: 80%;
+    margin-top : 20px;
+    margin-left : 20px;
+  }
+  .swiper-wrap {
+    height: 100%;
+    width: 90%;
+    position: relative;
+    display: block;
+    text-align: left;
+  }
+  .swiper-slide {
+    width: 300px;
+    height: 30%;
+  }
+
+  .swiper-slide img {
+    width: 100% ;
+    height: 50%;
+    object-fit: cover;
+  }
+
+  .swiper-button-next {
+    position: absolute;
+    transform: translateY(220px); /* 버튼을 100px 아래로 이동 */
+
+  }
+  .swiper-button-prev {
+    position: absolute;
+    transform: translateY(220px); /* 버튼을 100px 아래로 이동 */
+
+  }
+
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<h3 class = 'title'> Rotten Mellon </h3>
+{#최근 리뷰들 올려주기#}
+<div class="search-form">
+    <form method="GET" action="{% url 'music:search_results' %}">
+        <input class="search-input" type="text" name="q" value="{% if query %}{{ query }}{% endif %}" placeholder="Search Artists or Musician" >
+        <button class="search-btn" type="submit">Search</button>
+    </form>
+</div>
+
+
+<h3 style = "margin : 20px;">  Trend Track </h3>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+    {% if track_boards %}
+        {% for track_board in track_boards %}
+            <div class="swiper-slide">
+                <a href="{% url 'music:track_page' track_board.track.track_id %}">
+                    <img src="{{ track_board.track.track_image_link }}" alt="{{ track_board.track_name }}">
+                </a>
+                <div class="swiper-text" style="text-align: center;">{{ track_board.track.artist_name }}</div>
+                <div class="swiper-text" style="text-align: center; font-weight: bold;">{{ track_board.track.track_name }}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>
+
+
+{% block script %}
+<script>
+    var mySwiper = new Swiper('.swiper-container', {
+        slidesPerView: 3,
+        spaceBetween: 0,
+        loop : true,
+        autoplayDisableOnInteraction: false,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        }
+    });
+</script>
+
+{% endblock %}
+{% endblock %}

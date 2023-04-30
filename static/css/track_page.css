@@ -1,0 +1,37 @@
+/* 트랙 컨테이너 */
+.track-container {
+    margin-top: 10%;
+    text-align: center;
+  }
+
+  /* 트랙 이미지 */
+  .track-image {
+    width: 100%;
+  }
+
+  /* 유사한 트랙 */
+  .similar-track {
+    display: flex;
+    align-items: center;
+    margin-top: 2%;
+  }
+
+  /* 유사한 트랙 이미지 */
+  .similar-track-image {
+    width: 20%;
+    margin-right: 2%;
+  }
+
+  /* 유사한 트랙 링크 */
+  .similar-track a {
+    color: #333;
+    text-decoration: none;
+  }
+
+  /* 유사한 트랙 링크 마우스 호버 */
+  .similar-track a:hover {
+    text-decoration: underline;
+  }
+  .button_form{
+    width : 20%
+  }

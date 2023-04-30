@@ -1,0 +1,56 @@
+{% extends 'user_base.html' %}
+
+{% block content %}
+{% load static %}
+{% load music_filters %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/search_results.css' %}">
+
+<br>
+<div class="search-form">
+    <form method="GET" action="{% url "music:search_results" %}">
+        <input class="search-input" type="text" name="q" value="{{ query }}" placeholder="Search Artists">
+        <button class="search-btn" type="submit">Search</button>
+    </form>
+</div>
+
+<div class="row ">
+    <div class="col-md-6 ">
+        <div class="row" style="margin:7%" >
+            <h2>아티스트</h2>
+            {% if results %}
+                {% for result in results %}
+                    {% if result|class_name == 'Artist' %}
+                        <ul>
+                            <li>
+                                <img class = "img-list" src="{{ result.artist_image_link }}" alt="{{ result.artist_name }}" >
+                                <a href="{% url 'music:artist_page' result.artist_id %}">{{ result.artist_name }}</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>찾으시는 "{{ query }}"에 대한 검색 결과는 없습니다😭</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6 ">
+        <div class="row" style="margin:7%" >
+            <h2>트랙</h2>
+            {% if results %}
+                {% for result in results %}
+                    {% if result|class_name == 'Track' %}
+                        <ul>
+                            <li>
+                                <img class="img-list" src="{{ result.track_image_link }}" alt= "{{ result.track_name }}">
+                                <a href="{% url 'music:track_page' result.track_id %}">{{result.artist_name}} - {{ result.track_name }}</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>찾으시는 "{{ query }}"에 대한 검색 결과는 없습니다😭</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

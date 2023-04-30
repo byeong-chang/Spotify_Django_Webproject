@@ -1,0 +1,27 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url "music:search" %}" style = font-size:40px;margin:10px>
+          <img src="{% static "img/rottenmellon.png" %}" width="150px" height="80px" alt="Rotten Mellon">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url "music:playlist" %}" style="font-size: 15px" font-weight = "bold">My Playlist </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url "music:followlist" %}" style="font-size: 15px" font-weight = "bold"> My Followlist</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url "music:recent_reply" %}" style="font-size: 15px" font-weight = "bold"> Recent Comments </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="{% url "account:logout" %}" style="font-size: 15px" font-weight = "bold"> ({{ user.username }}) Logout </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>

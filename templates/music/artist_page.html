@@ -1,0 +1,129 @@
+{% extends 'user_base.html' %}
+{% block content %}
+{% load static %}
+<!-- CSS 파일 링크 -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/artist_page.css' %}">
+
+<div class="row" style="margin-right: 3%;margin-left: 3%;margin-top: 3%" >
+  <div class="col-md-7">
+
+      <div class="row">
+        <div class="col-md-6">
+            <!-- 아티스트 칸 -->
+            <div class = "artist-container">
+                <h1>{{ artist.artist_name }}</h1>
+                <img class = "artist-image" src="{{ artist.artist_image_link }}" alt="{{ artist.artist_name }}">
+            </div>
+            <div class="badge bg-light text-dark p-2">
+                {% if artist in request.user.like_artist.all %}
+                <a href="javascript:void(0)" data-uri="{% url 'board:artist_follow' artist.artist_id %}"
+                   class="follow mbc btn btn-sm btn-outline-secondary"> follow 삭제하기
+                </a>
+
+                {% else %}
+                <a href="javascript:void(0)" data-uri="{% url 'board:artist_follow' artist.artist_id %}"
+                   class="follow btn btn-sm btn-outline-secondary" > follow 하기
+                </a>
+                {% endif %}
+
+
+            </div>
+        </div>
+        <div class="col-md-6" style = margin-top:10%>
+            <div>
+                <strong><p style="font-size: 18px;"> Artist Popularity : {{ artist.artist_popularity }}</p></strong>
+                <strong><p style="font-size: 18px;"> Spotify Follower : {{ artist.artist_followers }}</p></strong>
+                <strong><p style="font-size: 18px;"> Rotten Mellon Follower : {{ artist.like.count }}</p></strong>
+            </div>
+        </div>
+      </div>
+      <div>
+        <form action="{% url 'music:artist_review_create' artist.artist_id %}" method="post" class="my-3">
+            {% csrf_token %}
+            {% include "form_erros.html" %}
+            <div class="mb-3">
+                <label for="content" class="form-label" style = font-size:20px>댓글 달기</label>
+                <textarea name="content" id="content" class="form-control" value="{{ form.content.value|default_if_none:'' }}" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">답변등록</button>
+        </form>
+      </div>
+      <div>
+        <h5 class="border-bottom my-3 py-2">{{boardcount}}개의 글이 있습니다.</h5>
+        {% if artistboards %}
+        {% for artistboard in artistboards %}
+
+        <div class="card my-3">
+            <div class="card-body">
+                <div class="card-text" style="white-space: pre-line;">{{ artistboard.content }}</div><br>
+                <div class="d-flex justify-content-end">
+                    <div class="badge bg-light text-dark p-2">
+                        작성자 : {{ artistboard.user.username}}
+                    </div>
+                    <div class="badge bg-light text-dark p-2">
+                        작성일시 : {{ artistboard.create_date}}
+                    </div>
+                    <div class="badge bg-light text-dark p-2">
+                         <a href="javascript:void(0)" data-uri="{% url 'board:artist_vote' artistboard.id %}"
+                           class="recommend btn btn-sm btn-outline-secondary"> 좋아요
+                            <span class="badge rounded-pill bg-success">{{artistboard.like.count}}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+            <!-- 페이징처리 시작 -->
+        <ul class="pagination justify-content-center">
+            <!-- 이전페이지 -->
+            {% if artistboards.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ artistboards.previous_page_number }}">이전</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+            {% endif %}
+            <!-- 페이지리스트 -->
+            {% for page_number in artistboards.paginator.page_range %}
+            {% if page_number == artistboards.number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            <!-- 다음페이지 -->
+            {% if artistboards.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ artistboards.next_page_number }}">다음</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
+            {% endif %}
+        </ul>
+        <!-- 페이징처리 끝 -->
+        {% else %}
+            <p>아직 평가가 없는 가수입니다.</p>
+        {% endif %}
+      </div>
+  </div>
+
+<div class="col-md-5" style="margin-top: 2%; max-height: 1000px; overflow-y: auto;">
+    <h2>{{ artist.artist_name }}의 노래들</h2>
+   {% for track in tracks %}
+        <div class="track">
+            <img class="track-image" src="{{ track.track_image_link }}" alt="{{ track.track_name }}">
+            <a href="{% url 'music:track_page' track.track_id %}">{{track.artist_name}} - {{ track.track_name }}</a>
+        </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+<!-- 오류표시 Start -->
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">
+    {% for field in form %}
+    {% if field.errors %}
+    <div>
+        <strong>{{ field.label }}</strong>
+        {{ field.errors }}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+<!-- 오류표시 End -->

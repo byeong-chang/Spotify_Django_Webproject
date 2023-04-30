@@ -1,0 +1,64 @@
+{% extends 'user_base.html' %}
+
+{% block content %}
+{% load static %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="row" style="margin:7%" >
+            <h3> 방금 아티스트에 달린 댓글 </h3>
+            {% for recent_artistboard in recent_artistboards  %}
+            <div class="card my-2">
+                <div class="card-body">
+                    <div class="card-text" style="white-space: pre-line;">{{ recent_artistboard.content }}</div><br>
+                    <div class="d-flex justify-content-end">
+                        {% comment %} <img src="{{ recent_artistboard.artist.artist_image_link }}" alt="{{ recent_artistboard.artist.artist_name }}" width="100" height="100"> {% endcomment %}
+                        <a style = font-size:20px href="{% url 'music:artist_page' recent_artistboard.artist.artist_id %}">{{ recent_artistboard.artist.artist_name }}</a>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="badge bg-light text-dark p-2">
+                            작성일시 : {{ recent_artistboard.create_date}}
+                        </div>
+                        <div class="badge bg-light text-dark p-2">
+                            작성자 : {{ recent_artistboard.username}}
+                        </div>
+                        <div class="badge bg-light text-dark p-2">
+                            좋아요 : {{ recent_artistboard.like.count}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row" style="margin:7%" >
+            <h3> 방금 트랙에 달린 댓글 </h3>
+            {% for recent_trackboard in recent_trackboards  %}
+            <div class="card my-2">
+                <div class="card-body">
+                    <div class="card-text" style="white-space: pre-line;">{{ recent_trackboard.content }}</div><br>
+                    <div class="d-flex justify-content-end">
+                        {% comment %} <img src="{{ recent_trackboard.track.track_image_link }}" alt="{{ recent_trackboard.track.track_name }}" width="100" height="100"> {% endcomment %}
+                        <a style = font-size:20px href="{% url 'music:track_page' recent_trackboard.track.track_id %}">{{ recent_trackboard.track.track_name }}</a>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="badge bg-light text-dark p-2">
+                            작성일시 : {{ recent_trackboard.create_date}}
+                        </div>
+                        <div class="badge bg-light text-dark p-2">
+                            작성자 : {{ recent_trackboard.username}}
+                        </div>
+                        <div class="badge bg-light text-dark p-2">
+                            좋아요 : {{ recent_trackboard.like.count}}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock%}

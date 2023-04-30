@@ -1,0 +1,129 @@
+{% extends 'user_base.html' %}
+{% block content %}
+{% load static %}
+<div class="row" style="margin-right: 3%;margin-left: 3%;margin-top: 3%" >
+    <div class="col-md-7">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- 트랙 소개 칸 -->
+                <div class = "track-container">
+                    <!-- 트랙 artist_id -->
+                    <a href="{% url 'music:artist_page' track.artist_id %}" style = font-size:40px>가수 : {{track.artist_name}}</a><br>
+                    <a href="{% url 'music:track_page' track.track_id %}" style = font-size:25px>노래 제목 : {{track.track_name}}</a>
+                    <img class="track-image" src="{{ track.track_image_link }}" alt="{{ track.track_name }}">
+                </div>
+            </div>
+            <div class="col-md-6" style = margin-top:10%>
+                <div><br>
+                    <strong><p style="font-size: 18px;"> Track Popularity : {{ track.track_popularity }}</p></strong>
+                    <strong><p style="font-size: 18px;"> Track Release Date : {{ track.track_release_date }}</p></strong>
+                </div>
+            </div>
+            <div class="badge bg-light text-dark p-2" style = width:51%>
+                {% if track in request.user.like_track.all %}
+                <a href="javascript:void(0)" data-uri="{% url 'board:track_follow' track.track_id %}"
+                   class="playlist mbc btn btn-sm btn-outline-secondary"> 나의 플레이리스트에서 삭제하기
+                    <span class="badge rounded-pill bg-success">{{track.like.count}}</span>
+                </a>
+                {% else %}
+                <a href="javascript:void(0)" data-uri="{% url 'board:track_follow' track.track_id %}"
+                   class="playlist btn btn-sm btn-outline-secondary"> 나의 플레이리스트에 담기
+                    <span class="badge rounded-pill bg-success">{{track.like.count}}</span>
+                </a>
+                {% endif %}
+
+            </div>
+        </div>
+        <div>
+        <form action="{% url 'music:track_review_create' track.track_id %}" method="post" class="my-3">
+            {% csrf_token %}
+{#            {% include 'form_errors.html' %}#}
+            <div class="mb-3">
+                <label for="content" class="form-label" style = font-size:20px>댓글 달기</label>
+                <textarea name="content" id="content" class="form-control" rows="5"required></textarea>
+            </div>
+            <input type="submit" value="답변등록" class="btn btn-primary" >
+        </form>
+      </div>
+      <div>
+        <h5 class="border-bottom my-3 py-2">{{boardcount}}개의 글이 있습니다.</h5>
+        {% if trackboards %}
+        {% for trackboard in trackboards %}
+
+
+        <div class="card my-3">
+            <div class="card-body">
+                <div class="card-text" style="white-space: pre-line;">{{ trackboard.content }}</div><br>
+                <div class="d-flex justify-content-end">
+                    <div class="badge bg-light text-dark p-2">
+                        작성자 : {{ user.username}}
+                    </div>
+                    <div class="badge bg-light text-dark p-2">
+                        작성일시 : {{ trackboard.create_date}}
+                    </div>
+                    <div class="badge bg-light text-dark p-2">
+                        <a href="javascript:void(0)" data-uri="{% url 'board:track_vote' trackboard.id  %}"
+                           class="recommend btn btn-sm btn-outline-secondary"> 추천
+                            <span class="badge rounded-pill bg-success">{{trackboard.like.count}}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+            <!-- 페이징처리 시작 -->
+        <ul class="pagination justify-content-center">
+            <!-- 이전페이지 -->
+            {% if trackboards.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ trackboards.previous_page_number }}">이전</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+            {% endif %}
+            <!-- 페이지리스트 -->
+            {% for page_number in trackboards.paginator.page_range %}
+            {% if page_number == trackboards.number %}
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            <!-- 다음페이지 -->
+            {% if trackboards.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ trackboards.next_page_number }}">다음</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
+            {% endif %}
+        </ul>
+        <!-- 페이징처리 끝 -->
+        {% else %}
+            <p>아직 평가가 없는 노래입니다.</p>
+        {% endif %}
+      </div>
+
+  </div>
+    <div class="col-md-5" style="margin-top: 2%">
+        <h2>이 노래와 유사한 추천 음악</h2>
+            {% for similar_track in similar_tracks %}
+                <div class="similar-track">
+                    <img class="similar-track-image" src="{{ similar_track.track_image_link }}" alt="{{ similar_track.track_name }}">
+                    <a href="{% url 'music:track_page' similar_track.track_id %}">{{similar_track.artist_name}} - {{ similar_track.track_name }}</a>
+                </div>
+            {% endfor %}
+    </div>
+    </div>
+
+<!-- CSS 파일 링크 -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/track_page.css' %}">
+{% endblock %}
