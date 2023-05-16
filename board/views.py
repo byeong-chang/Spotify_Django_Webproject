@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
-from music.models import Artist, Track, TrackBoard, ArtistBoard
+from music.models import Artist, Track, TrackBoard, ArtistBoard,User
 
 
 # Create your views here.

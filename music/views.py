@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Artist, Track, ArtistBoard, TrackBoard
+from .models import Artist, Track, ArtistBoard, TrackBoard,User
 from .forms import TrackAnswerForm, ArtistAnswerForm
 from django.utils import timezone
 from django.core.paginator import Paginator
