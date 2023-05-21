@@ -22,10 +22,12 @@
               <a class="nav-link" href="{% url "account:logout" %}" style="font-size: 15px" font-weight = "bold"> ({{ user.username }}) Logout </a>
           </li>
           <li class="nav-item">
-            {% if not is_authenticate or time_diff <= 0%}
+          {{ request.session.get.time_diff }}
+          {{ session.get.is_authenticate }}
+            {% if not is_authenticate or time_diff <= 0 %}
             <a class="nav-link" href="{% url "spotify:spotify_login" %}" style="font-size: 15px" font-weight = "bold"> ⭐Spotify 연동하기⭐ </a>
             {% else %}
-            <a class="nav-link" href="{% url "music:music_home" %}" style="font-size: 15px" font-weight = "bold"> ⭐Spotify 연동 만료시간 : {{ user.expires_in}}⭐{{ time_diff }} </a>
+            <a class="nav-link" href="{% url "music:search" %}" style="font-size: 15px" font-weight = "bold"> ⭐Spotify 연동 만료시간 : {{ user.expires_in}}⭐{{ time_diff }}s </a>
             {% endif %}
           </li>
         </ul>

@@ -55,7 +55,7 @@ def IsAuthenticated(request):
     # 두 datetime 객체 사이의 시간 간격 계산
     time_difference = expires_in - current_time
     seconds = time_difference.total_seconds()
-    return render(request, 'music/recent_comment.html', {'is_authenticate' : is_authenticate, "time_diff" : seconds})
+    return render(request, 'music/search.html', {'is_authenticate' : is_authenticate, "time_diff" : seconds})
 
 class CurrentSong(APIView):
     def get(self, request, format = None):
@@ -67,37 +67,41 @@ class CurrentSong(APIView):
         #     return Response({},status=status.HTTP_404_NOT_FOUND)
         # host = room.host
         host = self.request.COOKIES.get('sessionid')
-        endpoint = 'player/currently-playing'
+        if host.exists():
+            endpoint = 'player/currently-playing'
+        else:
+            return Response({},status=status.HTTP_404_NOT_FOUND)
+
         response = execute_spotify_api_request(host, endpoint)
 
-        if 'error' in response or 'item' not in response:
-            return Response({},status=status.HTTP_204_NO_CONTENT)
+        # if 'error' in response or 'item' not in response:
+        #     return Response({},status=status.HTTP_204_NO_CONTENT)
 
-        item = response.get('item')
-        duration = item.get('duration_ms')
-        progress = response.get("progress_ms")
-        album_cover = item.get('album').get('images')[0].get('url')
-        is_playing = response.get('is_playing')
-        song_id = item.get('id')
-
-        artist_string = ""
-
-        for i,artist in enumerate(item.get('artist')):
-            if i>0:
-                artist_string +=", "
-            name = artist.get("name")
-            artist_string += name
-
-        song = {
-            'title' : item.get('name'),
-            'artist' : artist_string,
-            'duration' : duration,
-            'time' : progress,
-            'image_url' : album_cover,
-            'is_playing' : is_playing,
-            'votes' : 0,
-            'id' : song_id
-        }
+        # item = response.get('item')
+        # duration = item.get('duration_ms')
+        # progress = response.get("progress_ms")
+        # album_cover = item.get('album').get('images')[0].get('url')
+        # is_playing = response.get('is_playing')
+        # song_id = item.get('id')
+        #
+        # artist_string = ""
+        #
+        # for i,artist in enumerate(item.get('artist')):
+        #     if i>0:
+        #         artist_string +=", "
+        #     name = artist.get("name")
+        #     artist_string += name
+        #
+        # song = {
+        #     'title' : item.get('name'),
+        #     'artist' : artist_string,
+        #     'duration' : duration,
+        #     'time' : progress,
+        #     'image_url' : album_cover,
+        #     'is_playing' : is_playing,
+        #     'votes' : 0,
+        #     'id' : song_id
+        # }
 
         return Response(response,status=status.HTTP_200_OK)
 
