@@ -1,5 +1,8 @@
 from django.db import models
 
+from music.models import User
+
+
 class spotifyToken(models.Model):
     user = models.CharField(max_length=50,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -7,3 +10,4 @@ class spotifyToken(models.Model):
     access_token = models.CharField(max_length=150)
     expires_in = models.DateTimeField()
     token_type = models.CharField(max_length=50)
+    RottenMellon_user = models.ForeignKey(User, on_delete=models.CASCADE)

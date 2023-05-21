@@ -1,10 +1,12 @@
+
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class User(AbstractUser):
-    pass
+    expires_in = models.DateTimeField(default=timezone.now)
 
 class GlobalTop50(models.Model):
     track_id = models.CharField(max_length=255, primary_key=True)
