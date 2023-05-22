@@ -32,6 +32,7 @@ class Track(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     created_date = models.DateTimeField(default="")
     like = models.ManyToManyField(User, related_name='like_track')
+    track_uri = models.CharField(max_length=255,default=None)
     # 유사곡
     # similar_track_id1 = models.CharField(max_length=200, default=None)
     # similar_track_id2 = models.CharField(max_length=200, default=None)
